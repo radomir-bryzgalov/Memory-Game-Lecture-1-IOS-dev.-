@@ -11,31 +11,35 @@ struct ContentView: View {
     var body: some View {
         HStack {
             CardView()
-            CardView(isFaceUp: true)
+            CardView()
             CardView()
             CardView()
                 
         }
+        .foregroundColor(.orange)
         .padding()
     }
     
     
 struct CardView: View {
-    var isFaceUp: Bool = false
+    @State var isFaceUp: Bool = false
     
     var body: some View {
         ZStack{
+            let base = RoundedRectangle(cornerRadius: 10)
             if isFaceUp{
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.white)
-                RoundedRectangle(cornerRadius: 10)
-                    .strokeBorder(lineWidth: 3)
+                base.fill(.white)
+                base.strokeBorder(lineWidth: 2)
                 Text("🤠").font(.largeTitle)
             }
             else {
-                RoundedRectangle(cornerRadius:10)
-                    .fill(.cyan)
+                base
+                    
             }
+        }
+        .onTapGesture {
+            isFaceUp.toggle()
+            
         }
     }
     }
