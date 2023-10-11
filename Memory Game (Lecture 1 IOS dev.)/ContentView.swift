@@ -8,17 +8,27 @@
 import SwiftUI
 
 struct ContentView: View {
-    let emojis: Array<String> = ["👻","😈", "🕷️", "🎃","👽","🦊", "🍭", "🕸️", "🩸"]
+    let emojisHalloween: Array<String> = ["👻","😈","🕷️","🎃","🕸️","🩸"]
+    var emojisNewYears: Array<String> = ["🥶","🎅","⛄️","❄️","🎄","🍊"]
     
-    @State var cardCount: Int = 5
+    @State var emojis: Array<String> = [""]
+    @State var currentTheme:String = "H"
+    @State var cardCount: Int = 4
     
     var body: some View {
         HStack {
+            
             VStack {
-                ForEach(0..<cardCount, id: \.self) {index in
-                    CardView(content: emojis[index])
+                if currentTheme == "NY" {ForEach(0..<cardCount, id: \.self) {index in
+                    CardView(content: emojisNewYears[index])
                 }
                 .foregroundColor(.orange)
+                }
+                else if currentTheme == "H" {ForEach(0..<cardCount, id: \.self) {index in
+                    CardView(content: emojisHalloween[index])
+                }
+                .foregroundColor(.orange)
+                }
             }
             VStack {
                 Button("Add Card") {
@@ -31,13 +41,25 @@ struct ContentView: View {
                 }, label: {
                     Text("Remove Card")
                 })
+                Button(action: {
+                    if currentTheme == "NY"{
+                        currentTheme = "H"
+                    }
+                    else if currentTheme == "H" {
+                        currentTheme = "NY"
+                    }
+                }, label:{
+                    Text("Change theme")
+                })
                 .padding()
             }
         }
-            .padding()
+        .padding()
         
     }
+}
     
+
 struct CardView: View {
     let content: String
     @State var isFaceUp: Bool = true
@@ -61,7 +83,7 @@ struct CardView: View {
         }
     }
     }
-}
+
 
 
 
@@ -70,5 +92,4 @@ struct CardView: View {
 
 #Preview {
     ContentView()
-    
 }
