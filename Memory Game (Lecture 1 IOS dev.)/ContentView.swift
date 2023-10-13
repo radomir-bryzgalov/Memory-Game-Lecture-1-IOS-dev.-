@@ -8,54 +8,85 @@
 import SwiftUI
 
 struct ContentView: View {
-    let emojisHalloween: Array<String> = ["👻","😈","🕷️","🎃","🕸️","🩸"]
-    var emojisNewYears: Array<String> = ["🥶","🎅","⛄️","❄️","🎄","🍊"]
+    let emojisHalloween: Array<String> = ["👻","😈","🕷️","🎃","🕸️","🩸","💀","🍭"]
+    let emojisNewYears: Array<String> = ["🥶","🎅","⛄️","❄️","🎄","🍊","🦌","🎁"]
+    let emojisSports: Array<String> = ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🏉", "🎱"]
     
     @State var emojis: Array<String> = [""]
     @State var currentTheme:String = "H"
     @State var cardCount: Int = 4
     
     var body: some View {
-        HStack {
-            
-            VStack {
-                if currentTheme == "NY" {ForEach(0..<cardCount, id: \.self) {index in
-                    CardView(content: emojisNewYears[index])
-                }
-                .foregroundColor(.orange)
-                }
-                else if currentTheme == "H" {ForEach(0..<cardCount, id: \.self) {index in
-                    CardView(content: emojisHalloween[index])
-                }
-                .foregroundColor(.orange)
-                }
+        VStack{
+            if currentTheme == "H" {
+                Text("Memorize").font(.title).fontDesign(.rounded).foregroundColor(.orange)
             }
-            VStack {
-                Button("Add Card") {
-                    cardCount+=1
-                    
+            else if currentTheme == "NY" {
+                Text("Memorize").font(.title).fontDesign(.rounded).foregroundColor(.red)
+            }
+            else if currentTheme == "S" {
+                Text("Memorize").font(.title).fontDesign(.rounded).foregroundColor(.gray)
+            }
+            HStack {
+                
+                VStack {
+                    if currentTheme == "NY" {ForEach(0..<cardCount, id: \.self) {index in
+                        CardView(content: emojisNewYears[index])
+                    }
+                    .foregroundColor(.red)
+                    }
+                    else if currentTheme == "H" {ForEach(0..<cardCount, id: \.self) {index in
+                        CardView(content: emojisHalloween[index])
+                    }
+                    .foregroundColor(.orange)
+                    }
+                    else if currentTheme == "S" {ForEach(0..<cardCount, id: \.self) {index in
+                        CardView(content: emojisSports[index])
+                    }
+                    .foregroundColor(.gray)
+                    }
                 }
-                Spacer()
-                Button(action :{
-                    cardCount -= 1
-                }, label: {
-                    Text("Remove Card")
-                })
-                Button(action: {
-                    if currentTheme == "NY"{
+                
+                VStack {
+                    Button("Add Card") {
+                        if cardCount<8 {
+                            cardCount+=1
+                        }
+                        else {
+                            cardCount=cardCount
+                        }
+                    }
+                    .padding()
+                    
+                    Button("Remove Card"){
+                        if cardCount>0{
+                            cardCount -= 1
+                        }
+                        else{
+                            cardCount=cardCount
+                        }
+                    }
+                    Spacer()
+                    
+                    Button("Halloween Theme") {
                         currentTheme = "H"
                     }
-                    else if currentTheme == "H" {
+                    .padding()
+                    
+                    Button("New Years Theme") {
                         currentTheme = "NY"
                     }
-                }, label:{
-                    Text("Change theme")
-                })
-                .padding()
+                    .padding()
+                    
+                    Button("Sports Theme"){
+                        currentTheme = "S"
+                    }
+                    .padding()
+                }
             }
+            .padding()
+            
         }
-        .padding()
-        
     }
 }
     
