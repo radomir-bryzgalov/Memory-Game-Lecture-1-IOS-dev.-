@@ -8,35 +8,50 @@
 import SwiftUI
 
 struct ContentView: View {
-    let emojisHalloween: Array<String> = ["👻","😈","🕷️","🎃","🕸️","🩸","💀","🍭"]
-    let emojisNewYears: Array<String> = ["🥶","🎅","⛄️","❄️","🎄","🍊","🦌","🎁"]
-    let emojisSports: Array<String> = ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🏉", "🎱"]
+    @State var emojisHalloween: Array<String> = ["👻","😈","🕷️","🎃","🕸️","🩸","💀","🍭","👻","😈","🕷️","🎃","🕸️","🩸","💀","🍭"].shuffled()
+    @State var emojisNewYears: Array<String> = ["🥶","🎅","⛄️","❄️","🎄","🍊","🦌","🎁","🥶","🎅","⛄️","❄️","🎄","🍊","🦌","🎁"].shuffled()
+    @State var emojisSports: Array<String> = ["⚽️","🏀","🏈","⚾️","🎾","🎱","⚽️","🏀","🏈","⚾️","🎾","🎱"]
+        .shuffled()
     
-    @State var emojis: Array<String> = [""]
+    @State var currentEmojisList: Array<String> = [""]
     @State var currentTheme:String = "H"
-    @State var cardCount: Int = 4
+    @State var cardCount: Int = 16
     
     var body: some View {
         appName
         Spacer()
         VStack {
-            cards
+            ScrollView {
+                cards
+            }
             Spacer()
             HStack{
                 cardCountAdjusters
-               
                 themes
+                flipCardsButton
             }
             
         }.padding()
     }
+//    func currentCardCount(theme: String) -> int{
+//        if theme == "H"{
+//            return emojisHalloween.count()
+//        }
+//        else if theme == "NY" {
+//            return emojisNewYears.count()
+//        }
+//        else if theme == "S" {
+//            return emojisSports.count()
+//        }
+//    }
+    
     func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
         Button( action: {
             cardCount += offset},
                 label: {
             Image(systemName: symbol)
         })
-        .disabled(cardCount + offset > emojisSports.count || cardCount + offset < 1)
+        .disabled(cardCount + offset > emojisSports.count || cardCount + offset < 0)
         .font(.largeTitle)
         .imageScale(.large)
     }
@@ -49,9 +64,9 @@ struct ContentView: View {
     }
     var themes: some View{
         VStack{
+            sportsTheme
             halloweenTheme
             newYearsTheme
-            sportsTheme
         }
     }
     var appName: some View {
@@ -63,26 +78,29 @@ struct ContentView: View {
                 Text("Memorize").font(.title).fontDesign(.rounded).foregroundColor(.red)
             }
             else if currentTheme == "S" {
-                Text("Memorize").font(.title).fontDesign(.rounded).foregroundColor(.gray)
+                Text("Memorize").font(.title).fontDesign(.rounded).foregroundColor(.green)
             }
         }
     }
     var cards: some View{
-        LazyVGrid(columns: [GridItem(),GridItem(),GridItem()]){
-            if currentTheme == "NY" {ForEach(0..<cardCount, id: \.self) {index in
+        LazyVGrid(columns: [GridItem(),GridItem(),GridItem(),GridItem()]){
+            if currentTheme == "NY" {ForEach(0..<emojisNewYears.count, id: \.self) {index in
                 CardView(content: emojisNewYears[index])
+                    .aspectRatio(7/10, contentMode:  .fit)
             }
             .foregroundColor(.red)
             }
-            else if currentTheme == "H" {ForEach(0..<cardCount, id: \.self) {index in
+            else if currentTheme == "H" {ForEach(0..<emojisHalloween.count, id: \.self) {index in
                 CardView(content: emojisHalloween[index])
+                    .aspectRatio(7/10, contentMode:  .fit)
             }
             .foregroundColor(.orange)
             }
-            else if currentTheme == "S" {ForEach(0..<cardCount, id: \.self) {index in
+            else if currentTheme == "S" {ForEach(0..<emojisSports.count, id: \.self) {index in
                 CardView(content: emojisSports[index])
+                    .aspectRatio(7/10, contentMode:  .fit)
             }
-            .foregroundColor(.gray)
+            .foregroundColor(.green)
             }
         }
     }
@@ -94,26 +112,34 @@ struct ContentView: View {
         cardCountAdjuster(by: -1, symbol: "rectangle.stack.badge.minus")
     }
     var halloweenTheme: some View {
-        Button("Halloween Theme") {
+        Button("Halloween") {
             currentTheme = "H"
+            emojisHalloween.shuffle()
         }
+        .foregroundColor(.orange)
         .padding()
     }
     var newYearsTheme: some View {
-        Button("New Years Theme") {
+        Button("New Years") {
             currentTheme = "NY"
+            emojisNewYears.shuffle()
         }
+        .foregroundColor(.red)
         .padding()
     }
     var sportsTheme: some View {
-        Button("Sports Theme"){
+        Button("Sports"){
             currentTheme = "S"
+            emojisSports.shuffle()
         }
+        .foregroundColor(.green)
         .padding()
     }
+    var flipCardsButton: some View {
+        Button(action: {},
+               label:{Text("Flip")})
+    }
 }
-
-    
 
 struct CardView: View {
     let content: String
