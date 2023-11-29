@@ -9,7 +9,8 @@ import SwiftUI
 
 struct EmojiMemoryGameView: View {
     @ObservedObject var viewModel:EmojiMemoryGame
-    @State var emojisHalloween: Array<String> = ["👻","😈","🕷️","🎃","🕸️","🩸","💀","🍭","👻","😈","🕷️","🎃","🕸️","🩸","💀","🍭"].shuffled()
+    
+    @State var emojisHalloween: Array<String> = ["👻","😈","🕷️","🎃","🕸️","🩸","💀","🍭"].shuffled()
     @State var emojisNewYears: Array<String> = ["🥶","🎅","⛄️","❄️","🎄","🍊","🦌","🎁","🥶","🎅","⛄️","❄️","🎄","🍊","🦌","🎁"].shuffled()
     @State var emojisSports: Array<String> = ["⚽️","🏀","🏈","⚾️","🎾","🎱","⚽️","🏀","🏈","⚾️","🎾","🎱"]
         .shuffled()
@@ -18,11 +19,11 @@ struct EmojiMemoryGameView: View {
     @State var cardCount: Int = 16
     
     var body: some View {
-        appName
-        Spacer()
         VStack {
+            appName
             ScrollView {
                 cards
+                    .animation(.default, value: viewModel.cards)
             }
             Spacer()
             VStack{
@@ -56,26 +57,36 @@ struct EmojiMemoryGameView: View {
     }
     var cards: some View{
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 0)], spacing: 0){
-            if currentTheme == "NY" {ForEach(viewModel.cards.indices, id: \.self) {index in
-                CardView(viewModel.cards[index])
+            if currentTheme == "NY" {ForEach(viewModel.cards) {card in
+                CardView(card)
                     .aspectRatio(8/10, contentMode:  .fit)
                     .padding(4)
+                    .onTapGesture {
+                        viewModel.choose(card)
+                    }
                     
             }
             .foregroundColor(.red)
             }
-            else if currentTheme == "H" {ForEach(viewModel.cards.indices, id: \.self) {index in
-                CardView(viewModel.cards[index])
+            
+            else if currentTheme == "H" {ForEach(viewModel.cards) {card in
+                CardView(card)
                     .aspectRatio(8/10, contentMode:  .fit)
                     .padding(4)
+                    .onTapGesture {
+                        viewModel.choose(card)
+                    }
             }
             .foregroundColor(.orange)
             }
             else if currentTheme == "S" {
-                ForEach(viewModel.cards.indices, id: \.self) {index in
-                CardView(viewModel.cards[index])
-                    .aspectRatio(8/10, contentMode:  .fit)
-                    .padding(4)
+                ForEach(viewModel.cards) {card in
+                    CardView(card)
+                        .aspectRatio(8/10, contentMode:  .fit)
+                        .padding(4)
+                        .onTapGesture {
+                            viewModel.choose(card)
+                    }
             }
             .foregroundColor(.green)
             }
@@ -154,7 +165,7 @@ struct CardView: View {
             
         }
         .onTapGesture {
-            //card.isFaceUp.toggle()
+            //  card.isFaceUp.toggle()
             
         }
     }
@@ -165,7 +176,8 @@ struct CardView: View {
 
 
 
-
-#Preview {
-    EmojiMemoryGameView(viewModel: EmojiMemoryGame())
+struct EmojiMemoryGameView_Previews : PreviewProvider {
+    static var previews: some View {
+        EmojiMemoryGameView(viewModel: EmojiMemoryGame())
+    }
 }
