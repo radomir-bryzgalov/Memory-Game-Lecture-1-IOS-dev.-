@@ -17,18 +17,15 @@ struct EmojiMemoryGameView: View {
     
     @State var currentTheme:String = "S"
     @State var cardCount: Int = 16
-    
+    private let aspectRatio: CGFloat = 4/5
+
     var body: some View {
         VStack {
             appName
-            ScrollView {
-                cards
-                    .animation(.default, value: viewModel.cards)
-            }
+            cards.animation(.default, value: viewModel.cards)
             Spacer()
             VStack{
-//              cardCountAdjusters
-                themes
+                    themes
                 shuffleButton
             }
             
@@ -55,43 +52,40 @@ struct EmojiMemoryGameView: View {
             }
         }
     }
-    var cards: some View{
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 0)], spacing: 0){
-            if currentTheme == "NY" {ForEach(viewModel.cards) {card in
+    
+    @ViewBuilder
+    private var cards: some View {
+        if currentTheme == "NY" {
+            AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
                 CardView(card)
-                    .aspectRatio(8/10, contentMode:  .fit)
                     .padding(4)
                     .onTapGesture {
                         viewModel.choose(card)
                     }
-                    
-            }
-            .foregroundColor(.red)
-            }
-            
-            else if currentTheme == "H" {ForEach(viewModel.cards) {card in
-                CardView(card)
-                    .aspectRatio(8/10, contentMode:  .fit)
-                    .padding(4)
-                    .onTapGesture {
-                        viewModel.choose(card)
-                    }
-            }
-            .foregroundColor(.orange)
-            }
-            else if currentTheme == "S" {
-                ForEach(viewModel.cards) {card in
-                    CardView(card)
-                        .aspectRatio(8/10, contentMode:  .fit)
-                        .padding(4)
-                        .onTapGesture {
-                            viewModel.choose(card)
-                    }
-            }
-            .foregroundColor(.green)
+                    .foregroundColor(.red)
             }
         }
-    }
+        else if currentTheme == "S" {
+            AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
+                CardView(card)
+                    .padding(4)
+                    .onTapGesture {
+                        viewModel.choose(card)
+                    }
+                    .foregroundColor(.green)
+            }
+        }
+        else if currentTheme == "H" {
+            AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
+                CardView(card)
+                    .padding(4)
+                    .onTapGesture {
+                        viewModel.choose(card)
+                    }
+                    .foregroundColor(.orange)
+            }
+        }
+            }
     var halloweenTheme: some View {
         Button(action: {
             currentTheme = "H"
@@ -138,38 +132,6 @@ struct EmojiMemoryGameView: View {
         .padding()
     }
 }
-
-
-struct CardView: View {
-    let card: MemoryGame<String>.Card
-    
-    init(_ card: MemoryGame<String>.Card) {
-        self.card = card
-    }
-    
-    var body: some View {
-        ZStack{
-            let base = RoundedRectangle(cornerRadius: 10)
-            Group{
-                base.fill(Color.white)
-                base.strokeBorder(lineWidth: 2)
-                Text(card.content)
-                    .font(.system(size: 100))
-                    .minimumScaleFactor(0.01)
-                    .aspectRatio(1,contentMode: .fit)
-            }
-            .opacity(card.isFaceUp ? 1 : 0)
-            
-            base.fill().opacity(card.isFaceUp ? 0 : 1)
-        }
-        .opacity(card.isFaceUp || !card.isMatched ? 1 : 0)
-    }
-    }
-
-
-
-
-
 
 struct EmojiMemoryGameView_Previews : PreviewProvider {
     static var previews: some View {

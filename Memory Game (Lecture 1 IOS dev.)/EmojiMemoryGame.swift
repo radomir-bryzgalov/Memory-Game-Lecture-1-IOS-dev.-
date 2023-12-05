@@ -12,13 +12,13 @@ class EmojiMemoryGame: ObservableObject {
        .shuffled()
     
     private static func createMemoryGame() ->MemoryGame<String> {
-        return MemoryGame(numberOfPairsOfCards: 10) { pairIndex in
+        return MemoryGame(numberOfPairsOfCards: 8) { pairIndex in
             if emojisHalloween.indices.contains(pairIndex) {
                 return emojisHalloween[pairIndex] //closure above ^
             } else {
                 return "❌"
             }
-        }
+        } 
     }
         
     @Published private var model = createMemoryGame()
