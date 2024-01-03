@@ -22,7 +22,7 @@ struct EmojiMemoryGameView: View {
     var body: some View {
         VStack {
             appName
-            cards.animation(.default, value: viewModel.cards)
+            cards
             Spacer()
             VStack{
                     themes
@@ -60,7 +60,8 @@ struct EmojiMemoryGameView: View {
                 CardView(card)
                     .padding(4)
                     .onTapGesture {
-                        viewModel.choose(card)
+                        withAnimation {viewModel.choose(card)
+                        }
                     }
                     .foregroundColor(.red)
             }
@@ -70,7 +71,8 @@ struct EmojiMemoryGameView: View {
                 CardView(card)
                     .padding(4)
                     .onTapGesture {
-                        viewModel.choose(card)
+                        withAnimation {viewModel.choose(card)
+                        }
                     }
                     .foregroundColor(.green)
             }
@@ -80,7 +82,8 @@ struct EmojiMemoryGameView: View {
                 CardView(card)
                     .padding(4)
                     .onTapGesture {
-                        viewModel.choose(card)
+                        withAnimation {viewModel.choose(card)
+                        }
                     }
                     .foregroundColor(.orange)
             }
@@ -120,13 +123,16 @@ struct EmojiMemoryGameView: View {
     var shuffleButton: some View {
         Button(action: {
             if currentTheme == "H"{
-                viewModel.shuffle()
+                withAnimation {viewModel.shuffle()
+                }
             }
             else if currentTheme == "NY" {
-                viewModel.shuffle()
+                withAnimation {viewModel.shuffle()
+                }           
             }
             else if currentTheme == "S" {
-                viewModel.shuffle()
+                withAnimation {viewModel.shuffle()
+                }
             }
         }, label: {Text("Shuffle")})
         .padding()
