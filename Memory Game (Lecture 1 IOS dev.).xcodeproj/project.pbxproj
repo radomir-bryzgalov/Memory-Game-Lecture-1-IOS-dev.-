@@ -18,6 +18,7 @@
 		8E3B2BF32ACE3E8C00C54A1F /* Memory_Game__Lecture_1_IOS_dev__UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3B2BF22ACE3E8C00C54A1F /* Memory_Game__Lecture_1_IOS_dev__UITestsLaunchTests.swift */; };
 		FA2BF6FD2B1D8D54009D61EB /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2BF6FC2B1D8D54009D61EB /* AspectVGrid.swift */; };
 		FAAAE36A2B1EDE1400879AAC /* Cardify.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAAE3692B1EDE1400879AAC /* Cardify.swift */; };
+		FAB9E62A2B473E3B00238238 /* FlyingNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB9E6292B473E3B00238238 /* FlyingNumber.swift */; };
 		FAF594962B1E0F0200450651 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF594952B1E0F0100450651 /* CardView.swift */; };
 		FAF594982B1E144600450651 /* ShuffleButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF594972B1E144600450651 /* ShuffleButtonView.swift */; };
 		FAF5949A2B1E17BC00450651 /* Pie.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF594992B1E17BC00450651 /* Pie.swift */; };
@@ -55,6 +56,7 @@
 		8E3B2BF22ACE3E8C00C54A1F /* Memory_Game__Lecture_1_IOS_dev__UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memory_Game__Lecture_1_IOS_dev__UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		FA2BF6FC2B1D8D54009D61EB /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 		FAAAE3692B1EDE1400879AAC /* Cardify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cardify.swift; sourceTree = "<group>"; };
+		FAB9E6292B473E3B00238238 /* FlyingNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyingNumber.swift; sourceTree = "<group>"; };
 		FAF594952B1E0F0100450651 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		FAF594972B1E144600450651 /* ShuffleButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleButtonView.swift; sourceTree = "<group>"; };
 		FAF594992B1E17BC00450651 /* Pie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pie.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 				8E0466D02AE6B7F30025E8BA /* EmojiMemoryGame.swift */,
 				8E3B2BD52ACE3E8A00C54A1F /* Memory_Game__Lecture_1_IOS_dev__App.swift */,
 				8E3B2BD72ACE3E8A00C54A1F /* ContentView.swift */,
+				FAB9E6292B473E3B00238238 /* FlyingNumber.swift */,
 				8E3B2BD92ACE3E8B00C54A1F /* Assets.xcassets */,
 				8E3B2BDB2ACE3E8B00C54A1F /* Preview Content */,
 			);
@@ -287,6 +290,7 @@
 				FA2BF6FD2B1D8D54009D61EB /* AspectVGrid.swift in Sources */,
 				FAF594962B1E0F0200450651 /* CardView.swift in Sources */,
 				8E0466D12AE6B7F30025E8BA /* EmojiMemoryGame.swift in Sources */,
+				FAB9E62A2B473E3B00238238 /* FlyingNumber.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

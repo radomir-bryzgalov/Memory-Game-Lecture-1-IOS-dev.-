@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct EmojiMemoryGameView: View {
+    typealias Card = MemoryGame<String>.Card
+    
     @ObservedObject var viewModel:EmojiMemoryGame
     
     @State var emojisHalloween: Array<String> = ["👻","😈","🕷️","🎃","🕸️","🩸","💀","🍭"].shuffled()
@@ -23,13 +25,21 @@ struct EmojiMemoryGameView: View {
         VStack {
             appName
             cards
+            score
             Spacer()
             VStack{
-                    themes
+                themes
                 shuffleButton
             }
             
         }.padding()
+    }
+    
+    private var score: some View {
+        HStack {
+            Text("Score \(viewModel.score)")
+                .animation(nil)
+        }
     }
     
     var themes: some View{
@@ -59,9 +69,9 @@ struct EmojiMemoryGameView: View {
             AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
                 CardView(card)
                     .padding(4)
+                    .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
                     .onTapGesture {
-                        withAnimation {viewModel.choose(card)
-                        }
+                        choose(card)
                     }
                     .foregroundColor(.red)
             }
@@ -70,9 +80,9 @@ struct EmojiMemoryGameView: View {
             AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
                 CardView(card)
                     .padding(4)
+                    .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
                     .onTapGesture {
-                        withAnimation {viewModel.choose(card)
-                        }
+                        choose(card)
                     }
                     .foregroundColor(.green)
             }
@@ -81,14 +91,32 @@ struct EmojiMemoryGameView: View {
             AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
                 CardView(card)
                     .padding(4)
+                    .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
+                    .zIndex(scoreChange(causedBy: card) != 0 ? 100 : 0)
                     .onTapGesture {
-                        withAnimation {viewModel.choose(card)
-                        }
+                        choose(card)
                     }
                     .foregroundColor(.orange)
             }
         }
-            }
+    }
+    
+    private func choose ( _ card: Card) {
+        withAnimation {
+            let scoreBeforeChoosing = viewModel.score
+            viewModel.choose(card)
+            let scoreChange = viewModel.score - scoreBeforeChoosing
+            lastScoreChange = (scoreChange, card.id)
+        }
+    }
+    
+    @State private var lastScoreChange = (0, causedByCardId: "")
+    
+    private func scoreChange(causedBy card: Card) -> Int {
+        let (amount, id) = lastScoreChange
+        return card.id == id ? amount : 0
+    }
+    
     var halloweenTheme: some View {
         Button(action: {
             currentTheme = "H"

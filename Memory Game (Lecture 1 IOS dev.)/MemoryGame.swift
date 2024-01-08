@@ -10,6 +10,8 @@ import Foundation
 struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
     
+    private(set) var score = 0
+    
     init(numberOfPairsOfCards:Int, cardContentFactory: (Int) -> CardContent) {
         cards = []
         
@@ -32,6 +34,14 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                     if cards[chosenIndex].content == cards[potentialMatchIndex].content {
                         cards[chosenIndex].isMatched = true
                         cards[potentialMatchIndex].isMatched = true
+                        score += 2
+                    } else {
+                        if cards[chosenIndex].hasBeenSeen{
+                            score -= 1
+                        }
+                        if cards[potentialMatchIndex].hasBeenSeen {
+                            score -= 1
+                        }
                     }
                 } else {
                     indexOfTheOneAndOnlyFaceUpCard = chosenIndex
@@ -49,9 +59,39 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
                      
     struct Card: Equatable, Identifiable, CustomDebugStringConvertible {
-        var isFaceUp = false
+        var isFaceUp = false {
+            didSet {
+                if oldValue && !isFaceUp {
+                    hasBeenSeen = true
+                }
+            }
+        }
         var isMatched = false
+        var hasBeenSeen = false
         let content: CardContent
+        
+//        private mutating func startUsingBonusTime () {
+//            if isFaceUp && isMatched && bonusTimeRemaining > 0 , lasftFaceUpdate == nil {
+//                lastFaceUpdate = Date()
+//            }
+//        }
+//        
+//        private mutating func stopUsingBonusTime () {
+//            pastFaceUpTime = faceUpTime
+//            lastFaceUpDate = nil
+//        }
+//        
+//        var bonus: Int {
+//            Int(bonusTimeLimit * bonusPercentRemaining)
+//        }
+//        
+//        var bonusPercentRemaining: Double {
+//            bonusTimeLimit > 0 ? max(0 - bonusTimeLimit-faceTimeUp)/bonusTimeLimit : 0
+//        }
+//        
+//        var faceUpTime: TimeInterval {
+//            if let lastFaceUp
+//        }
         
         var id: String
         var debugDescription: String {
