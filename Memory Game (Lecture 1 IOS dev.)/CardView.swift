@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CardView: View {
     typealias Card = MemoryGame<String>.Card
-
+    
     let card: Card
     
     init(_ card: Card) {
@@ -17,23 +17,31 @@ struct CardView: View {
     }
     
     var body: some View {
-        Pie(endAngle: .degrees(180))
-            .opacity(0.4)
-            .overlay(
-                Text(card.content)
-                    .font(.system(size: 100))
-                    .minimumScaleFactor(0.01)
-                    .multilineTextAlignment(.center)
-                    .aspectRatio(1,contentMode: .fit)
+        TimelineView (.animation(minimumInterval:1/10)) {timeline in
+            if card.isFaceUp || !card.isMatched {
+                Pie(endAngle: .degrees(card.bonusPercentRemaining * 360))
+                    .opacity(0.4)
+                    .overlay(cardContents.padding(5))
                     .padding(5)
-                    .rotationEffect(.degrees(card.isMatched ? 360 : 0))
-                    .animation(.spin(duration:1), value: card.isMatched)
-            )
-            .padding(5)
-            .cardify(isFaceUp: card.isFaceUp)
-            .opacity(card.isFaceUp || !card.isMatched ? 1 : 0)
+                    .cardify(isFaceUp: card.isFaceUp)
+                    .transition(.scale)
+            } else {
+                Color.clear
+            }
+        }
+    }
+    var cardContents: some View {
+        Text(card.content)
+            .font(.system(size: 100))
+            .minimumScaleFactor(0.01)
+            .multilineTextAlignment(.center)
+            .aspectRatio(1,contentMode: .fit)
+            .rotationEffect(.degrees(card.isMatched ? 360 : 0))
+            .animation(.spin(duration:1), value: card.isMatched)
     }
 }
+
+
 
 extension Animation{
     static func spin(duration: TimeInterval) -> Animation{
