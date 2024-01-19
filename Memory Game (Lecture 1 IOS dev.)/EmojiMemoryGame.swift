@@ -27,6 +27,7 @@ class EmojiMemoryGame: ObservableObject {
         model.cards
     }
     
+    
     var score: Int {
         model.score
     }
@@ -39,5 +40,19 @@ class EmojiMemoryGame: ObservableObject {
     
     func choose(_ card: MemoryGame<String>.Card) {
         model.choose(card)
+    }
+    
+    func restartGame() ->MemoryGame<String> {
+        MemoryGame(numberOfPairsOfCards: 8) { pairIndex in
+            if EmojiMemoryGame.emojisHalloween.indices.contains(pairIndex) {
+                return EmojiMemoryGame.emojisHalloween[pairIndex] //closure above ^
+            } else {
+                return "❌"
+            }
+        }
+    }
+    
+    func restart() {
+        model.restart()
     }
 }

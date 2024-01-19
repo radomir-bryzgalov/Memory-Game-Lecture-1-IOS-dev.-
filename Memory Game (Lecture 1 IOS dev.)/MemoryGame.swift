@@ -20,13 +20,15 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
             cards.append(Card(content: content, id: "\(pairIndex+1)a"))
             cards.append(Card(content: content, id: "\(pairIndex+1)b"))
         }
+//        cards.shuffle()
     }
     
     var indexOfTheOneAndOnlyFaceUpCard: Int? {
         get{ cards.indices.filter{index in cards[index].isFaceUp}.only}
         set {cards.indices.forEach{cards[$0].isFaceUp = (newValue == $0)}}
     }
-        
+    
+    
     mutating func choose(_ card:Card){
         if let chosenIndex = cards.firstIndex(where: { $0.id == card.id}){
             if !cards[chosenIndex].isFaceUp && !cards[chosenIndex].isMatched {
@@ -49,13 +51,25 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                 cards[chosenIndex].isFaceUp = true
             }
         }
+        checkForGameCompletion()
     }
     
-
+    private mutating func checkForGameCompletion() {
+        //Check if no cards exist that are not matched
+        if !cards.contains(where: {$0.isMatched == false}) {
+            print("Game Over")
+            cards = []
+        }
+    }
     
     mutating func shuffle() {
         cards.shuffle()
         print(cards)
+    }
+    
+    mutating func restart() {
+        cards = []
+        score = 0
     }
                      
     struct Card: Equatable, Identifiable, CustomDebugStringConvertible {
@@ -83,7 +97,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         
         // MARK 
         private mutating func startUsingBonusTime () {
-            if isFaceUp && isMatched && bonusPercentRemaining > 0 , lastFaceUpDate == nil {
+            if isFaceUp && !isMatched && bonusPercentRemaining > 0 , lastFaceUpDate == nil {
                 lastFaceUpDate = Date()
             }
         }

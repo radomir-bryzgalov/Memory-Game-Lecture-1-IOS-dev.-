@@ -12,24 +12,34 @@ struct EmojiMemoryGameView: View {
     
     @ObservedObject var viewModel:EmojiMemoryGame
     
-    @State var emojisHalloween: Array<String> = ["👻","😈","🕷️","🎃","🕸️","🩸","💀","🍭"].shuffled()
+    @State var emojisHalloween: Array<String> =  ["👻","😈","🕷️","🎃","🕸️","🩸","💀","🍭"].shuffled()
+
     @State var emojisNewYears: Array<String> = ["🥶","🎅","⛄️","❄️","🎄","🍊","🦌","🎁","🥶","🎅","⛄️","❄️","🎄","🍊","🦌","🎁"].shuffled()
     @State var emojisSports: Array<String> = ["⚽️","🏀","🏈","⚾️","🎾","🎱","⚽️","🏀","🏈","⚾️","🎾","🎱"]
         .shuffled()
     
-    @State var currentTheme:String = "S"
+    @State var currentTheme:String = "NY"
     @State var cardCount: Int = 16
     private let aspectRatio: CGFloat = 4/5
+    private let dealAnimation: Animation = .easeInOut(duration: 2)
+    private let delayInterval: TimeInterval = 0.15
+    private let deckWidth: CGFloat = 50
+    
 
     var body: some View {
         VStack {
             appName
             cards
             score
+            deck.foregroundColor(.red)
             Spacer()
             VStack{
-                themes
-                shuffleButton
+                //               themes
+                HStack {
+                    restartButton
+                    .padding()
+                    shuffleButton
+                }
             }
             
         }.padding()
@@ -69,65 +79,50 @@ struct EmojiMemoryGameView: View {
             AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
                 if isDealt(card) {
                     CardView(card)
+                        .matchedGeometryEffect(id: card.id, in: dealingNamepace)
+                        .transition(.asymmetric(insertion: .identity, removal: .identity))
                         .padding(4)
                         .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
                         .onTapGesture {
                             choose(card)
                         }
                         .foregroundColor(.red)
-                        .transition(.opacity)
-                }
-            }
-            .onAppear{
-                withAnimation(.easeInOut(duration: 2)){
-                    for card in viewModel.cards{
-                        dealt.insert(card.id)
-                    }
                 }
             }
         }
-
-        else if currentTheme == "S" {
-            AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
-                if isDealt(card){
-                    CardView(card)
-                        .padding(4)
-                        .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
-                        .onTapGesture {
-                            choose(card)
-                        }
-                        .foregroundColor(.green)
-                }
-            }
-            .onAppear{
-                withAnimation(.easeInOut(duration: 2)){
-                    for card in viewModel.cards{
-                        dealt.insert(card.id)
-                    }
-                }
-            }
-        }
-        else if currentTheme == "H" {
-            AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
-                if isDealt(card) {
-                    CardView(card)
-                        .padding(4)
-                        .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
-                        .zIndex(scoreChange(causedBy: card) != 0 ? 100 : 0)
-                        .onTapGesture {
-                            choose(card)
-                        }
-                        .foregroundColor(.orange)
-                }
-            }
-            .onAppear{
-                withAnimation(.easeInOut(duration: 2)){
-                    for card in viewModel.cards{
-                        dealt.insert(card.id)
-                    }
-                }
-            }
-        }
+        
+//        else if currentTheme == "S" {
+//            AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
+//                if isDealt(card){
+//                    CardView(card)
+//                        .padding(4)
+//                        .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
+//                        .onTapGesture {
+//                            choose(card)
+//                        }
+//                        .foregroundColor(.green)
+//                        .transition(.offset(
+//                            x: CGFloat.random(in: -1000...1000),
+//                            y: CGFloat.random(in: -1000...1000)
+//                        ))
+//                }
+//            }
+//        }
+//        else if currentTheme == "H" {
+//            AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
+//                if isDealt(card) {
+//                    CardView(card)
+//                        .matchedGeometryEffect(id: card.id, in: dealingNamepace)
+//                        .padding(4)
+//                        .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
+//                        .zIndex(scoreChange(causedBy: card) != 0 ? 100 : 0)
+//                        .onTapGesture {
+//                            choose(card)
+//                        }
+//                        .foregroundColor(.orange)
+//                }
+//            }
+//        }
     }
     
     @State private var dealt = Set<Card.ID>()
@@ -140,6 +135,34 @@ struct EmojiMemoryGameView: View {
         viewModel.cards.filter {!isDealt($0)}
     }
     
+    @Namespace private var dealingNamepace
+    
+    private var deck: some View {
+        ZStack {
+            ForEach(undealtCards) {card in
+                CardView(card)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamepace)
+                    .transition(.asymmetric(insertion: .identity, removal: .identity))
+            }
+        }
+        .frame(width: deckWidth, height: deckWidth / aspectRatio)
+        .onTapGesture{
+            deal()
+        }
+        
+    }
+    
+    private func deal () {
+        var delay: TimeInterval = 0
+        for card in viewModel.cards{
+            withAnimation(dealAnimation.delay(delay)){
+               _ = dealt.insert(card.id)
+            }
+            delay += delayInterval
+        }
+
+    }
+    
     private func choose ( _ card: Card) {
         withAnimation {
             let scoreBeforeChoosing = viewModel.score
@@ -148,6 +171,8 @@ struct EmojiMemoryGameView: View {
             lastScoreChange = (scoreChange, card.id)
         }
     }
+    
+    
     
     @State private var lastScoreChange = (0, causedByCardId: "")
     
@@ -204,7 +229,11 @@ struct EmojiMemoryGameView: View {
         }, label: {Text("Shuffle")})
         .padding()
     }
+    var restartButton: some View {
+        Button(action: {viewModel.restart()}, label: {Text("Restart")})
+    }
 }
+
 
 struct EmojiMemoryGameView_Previews : PreviewProvider {
     static var previews: some View {
