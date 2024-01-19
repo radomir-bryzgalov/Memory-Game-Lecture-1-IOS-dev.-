@@ -11,10 +11,10 @@ class EmojiMemoryGame: ObservableObject {
     private static let emojisHalloween = ["👻","😈","🕷️","🎃","🕸️","🩸","💀","🍭"]
        .shuffled()
     
-    private static func createMemoryGame() ->MemoryGame<String> {
+    private static func createMemoryGame() -> MemoryGame<String> {
         return MemoryGame(numberOfPairsOfCards: 8) { pairIndex in
             if emojisHalloween.indices.contains(pairIndex) {
-                return emojisHalloween[pairIndex] //closure above ^
+                return emojisHalloween[pairIndex] 
             } else {
                 return "❌"
             }

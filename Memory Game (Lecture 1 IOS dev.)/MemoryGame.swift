@@ -20,7 +20,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
             cards.append(Card(content: content, id: "\(pairIndex+1)a"))
             cards.append(Card(content: content, id: "\(pairIndex+1)b"))
         }
-//        cards.shuffle()
+        cards.shuffle()
     }
     
     var indexOfTheOneAndOnlyFaceUpCard: Int? {
@@ -52,13 +52,18 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
             }
         }
         checkForGameCompletion()
+        
     }
     
     private mutating func checkForGameCompletion() {
         //Check if no cards exist that are not matched
         if !cards.contains(where: {$0.isMatched == false}) {
             print("Game Over")
-            cards = []
+            if let indexOfTheLastRemainingCard = cards.firstIndex(where: {$0.isFaceUp == true}) {                cards[indexOfTheLastRemainingCard].isFaceUp = false
+            }
+            if let indexOfTheLastRemainingCard = cards.firstIndex(where: {$0.isFaceUp == true}) {
+                cards[indexOfTheLastRemainingCard].isFaceUp = false
+            }
         }
     }
     
@@ -68,8 +73,18 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     mutating func restart() {
-        cards = []
         score = 0
+        var newCards: Array<Card> = []
+        
+        for var i in cards {
+            i.isMatched=false
+            i.isFaceUp=false
+            i.hasBeenSeen=false
+            i.pastFaceUpTime=0
+            newCards.append(i)
+        }
+        cards=newCards
+        cards.shuffle()
     }
                      
     struct Card: Equatable, Identifiable, CustomDebugStringConvertible {
