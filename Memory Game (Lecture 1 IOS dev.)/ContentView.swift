@@ -30,17 +30,20 @@ struct EmojiMemoryGameView: View {
         VStack {
             appName
             cards
-            score
+            HStack {
+                score
+                Spacer()
+                highestScore
+            }
             deck.foregroundColor(.red)
             Spacer()
-            VStack{
-                //               themes
-                HStack {
-                    restartButton
+//            themes
+            HStack {
+                restartButton
                     .padding()
-                    shuffleButton
-                }
+//                shuffleButton
             }
+            
             
         }.padding()
     }
@@ -50,6 +53,11 @@ struct EmojiMemoryGameView: View {
             Text("Score \(viewModel.score)")
                 .animation(nil)
         }
+    }
+    
+    private var highestScore: some View {
+        Text("High Score \(viewModel.highestScore)")
+            .animation(nil)
     }
     
     var themes: some View{
@@ -91,38 +99,39 @@ struct EmojiMemoryGameView: View {
             }
         }
         
-//        else if currentTheme == "S" {
-//            AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
-//                if isDealt(card){
-//                    CardView(card)
-//                        .padding(4)
-//                        .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
-//                        .onTapGesture {
-//                            choose(card)
-//                        }
-//                        .foregroundColor(.green)
-//                        .transition(.offset(
-//                            x: CGFloat.random(in: -1000...1000),
-//                            y: CGFloat.random(in: -1000...1000)
-//                        ))
-//                }
-//            }
-//        }
-//        else if currentTheme == "H" {
-//            AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
-//                if isDealt(card) {
-//                    CardView(card)
-//                        .matchedGeometryEffect(id: card.id, in: dealingNamepace)
-//                        .padding(4)
-//                        .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
-//                        .zIndex(scoreChange(causedBy: card) != 0 ? 100 : 0)
-//                        .onTapGesture {
-//                            choose(card)
-//                        }
-//                        .foregroundColor(.orange)
-//                }
-//            }
-//        }
+        else if currentTheme == "S" {
+            AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
+                if isDealt(card){
+                    CardView(card)
+                        .padding(4)
+                        .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
+                        .onTapGesture {
+                            choose(card)
+                        }
+                        .foregroundColor(.green)
+                        .transition(.offset(
+                            x: CGFloat.random(in: -1000...1000),
+                            y: CGFloat.random(in: -1000...1000)
+                        ))
+                }
+            }
+        }
+        else if currentTheme == "H" {
+            AspectVGrid(viewModel.cards, aspectRatio:aspectRatio) {card in
+                if isDealt(card) {
+                    withAnimation {CardView(card)
+                        .matchedGeometryEffect(id: card.id, in: dealingNamepace)
+                        .padding(4)
+                        .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
+                        .zIndex(scoreChange(causedBy: card) != 0 ? 100 : 0)
+                        .onTapGesture {
+                            choose(card)
+                        }
+                        .foregroundColor(.orange)
+                }
+            }
+            }
+        }
     }
     
     @State private var dealt = Set<Card.ID>()

@@ -9,7 +9,7 @@ import Foundation
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
-    
+    private(set) var highestScore = 0
     private(set) var score = 0
     
     init(numberOfPairsOfCards:Int, cardContentFactory: (Int) -> CardContent) {
@@ -59,6 +59,9 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         //Check if no cards exist that are not matched
         if !cards.contains(where: {$0.isMatched == false}) {
             print("Game Over")
+            if score>highestScore {
+                highestScore=score
+            }
             if let indexOfTheLastRemainingCard = cards.firstIndex(where: {$0.isFaceUp == true}) {                cards[indexOfTheLastRemainingCard].isFaceUp = false
             }
             if let indexOfTheLastRemainingCard = cards.firstIndex(where: {$0.isFaceUp == true}) {

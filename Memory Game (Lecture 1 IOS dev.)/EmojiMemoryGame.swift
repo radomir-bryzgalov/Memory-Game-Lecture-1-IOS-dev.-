@@ -31,6 +31,9 @@ class EmojiMemoryGame: ObservableObject {
     var score: Int {
         model.score
     }
+    var highestScore: Int {
+        model.highestScore
+    }
     
     //MARK: - Intents
     
